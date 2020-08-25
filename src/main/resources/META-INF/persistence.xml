@@ -6,6 +6,7 @@
         <class>org.tutorial.model.Student</class>
         <class>org.tutorial.model.School</class>
         <class>org.tutorial.model.Tutor</class>
+        <class>org.tutorial.model.Teacher</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:~/test"/>

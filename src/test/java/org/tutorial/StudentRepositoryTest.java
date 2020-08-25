@@ -49,7 +49,7 @@ public class StudentRepositoryTest {
 
     assertNotNull(student);
     assertNotNull(student.getId());
-    assertEquals("Red", student.getLastName());
+    assertEquals("Alan", student.getLastName());
   }
 
   @Test
@@ -63,7 +63,7 @@ public class StudentRepositoryTest {
 
     assertNotNull(student);
     assertEquals("Green", student.getLastName());
-    assertEquals("Alan", student.getFirstName());
+    assertEquals("Red", student.getFirstName());
 
   }
 
