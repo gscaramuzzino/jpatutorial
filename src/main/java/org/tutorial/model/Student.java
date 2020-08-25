@@ -1,61 +1,53 @@
 package org.tutorial.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "student")
 @NamedQuery(name = "find student by id" ,query = "Select s from Student s where s.id = :id")
-public class Student {
+public class Student extends Person{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @OneToOne
+    private Tutor tutor;
 
-    @Column(name = "first_name", nullable = false, length = 150)
-    private String firstName;
+    @ManyToMany(mappedBy = "students")
+    private Set<Teacher> teachers = new HashSet<>();
 
-    @Column(name = "last_name", nullable = false, length = 250)
-    private String lastName;
+    public Student(String firstName, String lastName) {
+        super(firstName, lastName);
+    }
 
     public Student() {
     }
 
-    public Student(Long id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 
-    public Long getId() {
-        return id;
+    public Tutor getTutor() {
+        return tutor;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void addTeacher(Teacher teacher) {
+        boolean added = teachers.add(teacher);
+        if (added) {
+            teacher.getStudents().add(this);
+        }
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void removeTeacher(Teacher teacher) {
+        boolean remove = teachers.remove(teacher);
+        if (remove) {
+            teacher.getStudents().remove(this);
+        }
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public Set<Teacher> getTeachers() {
+        return teachers;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+    public void setTeachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
     }
 }

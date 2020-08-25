@@ -1,6 +1,9 @@
-package org.tutorial;
+package org.tutorial.repository;
 
+import org.tutorial.model.School;
 import org.tutorial.model.Student;
+import org.tutorial.model.Teacher;
+import org.tutorial.model.Tutor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,6 +31,14 @@ public class StudentRepository {
     entityManager.persist(student);
     entityManager.getTransaction().commit();
     return student;
+  }
+
+  public Tutor addTutor(Long id, Tutor tutor) {
+    entityManager.getTransaction().begin();
+    Student student = find(id);
+    student.setTutor(tutor);
+    entityManager.getTransaction().commit();
+    return tutor;
   }
 
   public Student find(Long id) {
@@ -115,6 +126,21 @@ public class StudentRepository {
     return query.getResultList();
   }
 
+  public void addTeacher(Long id, Teacher teacher) {
+    entityManager.getTransaction().begin();
+    Student student = find(id);
+    if(student != null) {
+     student.getTeachers().add(teacher);
+    }
+    entityManager.getTransaction().commit();
+  }
+
+  public void removeTeacher(Long id, Teacher teacher) {
+    Student student = find(id);
+    if(student != null) {
+      student.getTeachers().remove(teacher);
+    }
+  }
 
   public void close() {
     this.entityManager.close();
