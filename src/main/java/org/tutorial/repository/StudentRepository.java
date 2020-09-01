@@ -5,10 +5,9 @@ import org.tutorial.model.Student;
 import org.tutorial.model.Teacher;
 import org.tutorial.model.Tutor;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class StudentRepository {
@@ -141,6 +140,43 @@ public class StudentRepository {
       student.getTeachers().remove(teacher);
     }
   }
+
+  public List<Student> getStudentWithCriteriaBuilder() {
+    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+
+    Root<Student> studentRoot = criteriaQuery.from(Student.class);
+
+    criteriaQuery.select(studentRoot.get("firstName"));
+    criteriaQuery.distinct(true);
+    criteriaQuery.orderBy(criteriaBuilder.desc(studentRoot.get("firstName")));
+
+    CriteriaQuery<Student> select = criteriaQuery.select(studentRoot);
+    TypedQuery<Student> query = entityManager.createQuery(select);
+
+    return query.getResultList();
+  }
+
+  public List<Student> getStudentsWithWHEREFirstName() {
+
+    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Student> query = criteriaBuilder.createQuery(Student.class);
+
+    Root<Student> from = query.from(Student.class);
+
+    List firstNameList = Arrays.asList(new String[]{"SFirstName_1","SFirstName_2"});
+
+    Expression<String> exp = from.get("firstName");
+    Predicate in = exp.in(firstNameList);
+    query.where(in);
+    query.groupBy(from.get("lastName"));
+
+    CriteriaQuery<Student> select = query.select(from);
+    TypedQuery<Student> query1 = entityManager.createQuery(select);
+
+    return query1.getResultList();
+  }
+
 
   public void close() {
     this.entityManager.close();

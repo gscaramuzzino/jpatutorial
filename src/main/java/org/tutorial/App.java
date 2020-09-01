@@ -122,8 +122,20 @@ public class App {
 
     //System.out.println("Deleted student " + student.toString());
 
-    studentRepository.close();
 
+    //CRITERIA BUILDER
+
+    List<Student> studentList = studentRepository.getStudentWithCriteriaBuilder();
+
+    System.out.println("Print Students (Criteria Builder): ");
+    studentList.forEach(System.out::println);
+
+    List<Student> studentListWhere = studentRepository.getStudentsWithWHEREFirstName();
+
+    System.out.println("Print Students (Criteria Builder with WHERE and GROUP BY): ");
+    studentListWhere.forEach(System.out::println);
+
+    studentRepository.close();
 
   }
 }
